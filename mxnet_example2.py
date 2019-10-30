@@ -16,7 +16,7 @@ def return_split_models(model, layer):
     return model_f, model_h
 
 model = Sequential()
-model.add(Dense(50,input_shape=(100,)))
+model.add(Dense(50,input_shape=(1,)))
 model.add(Dense(40))
 model.add(Dense(30))
 model.add(Dense(20))
@@ -24,6 +24,27 @@ model.add(Dense(10))
 model_f, model_h = return_split_models(model, 2)
 print(model_f.summary())
 print(model_h.summary())
+
+print(model.predict([5]))
+
+inter = model_f.predict([5])
+
+print(model_h.predict(inter))
+
+
+
+
+
+
+# IGNORE THE REST
+
+
+
+
+
+
+
+
 
 # Create original model and save it
 inputs = Input((1,))
