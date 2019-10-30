@@ -3,6 +3,9 @@ from keras.models import Model, load_model, Sequential
 from keras.layers import Input, Dense, InputLayer
 from keras.optimizers import RMSprop
 import numpy as np
+import matplotlib.pyplot as plt
+
+from keras.datasets import mnist
 
 
 def return_split_models(model, layer):
@@ -21,6 +24,13 @@ model.add(Dense(40))
 model.add(Dense(30))
 model.add(Dense(20))
 model.add(Dense(10))
+
+print(model.predict([5]))
+
+model.save('test.h5')
+
+model = load_model('test.h5')
+
 model_f, model_h = return_split_models(model, 2)
 print(model_f.summary())
 print(model_h.summary())
@@ -31,10 +41,38 @@ inter = model_f.predict([5])
 
 print(model_h.predict(inter))
 
+m = load_model('keras_mnist_cnn.h5')
+print(m.summary())
 
 
 
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train = x_train.reshape(x_train.shape[0], 1, 28, 28)
+x_test = x_test.reshape(x_test.shape[0], 1, 28, 28)
 
+# plt.imshow(x_test[434], cmap="Greys")
+# plt.show()
+x_test = x_test.astype('float32')
+x_test /= 255
+nine_x = x_test[434].reshape(1,1,28,28)
+nine_y = y_test[434]
+result = m.predict(nine_x)
+print(result)
+print(np.argmax(result))
+print(nine_y)
+
+model_f, model_h = return_split_models(m, 2)
+model_h, model_g = return_split_models(model_h, 2)
+
+# print(model_f.summary())
+# print(model_h.summary())
+# print(model_g.summary())
+
+f = model_f.predict(nine_x)
+
+h = model_h.predict(f)
+
+print(model_g.predict(h))
 
 # IGNORE THE REST
 

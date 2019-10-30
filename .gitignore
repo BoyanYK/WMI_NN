@@ -106,4 +106,6 @@ venv.bak/
 
 # keras files
 *.h5
-
+ 
+# except keras test
+!keras_mnist_cnn.h5
