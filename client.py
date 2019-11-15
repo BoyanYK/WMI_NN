@@ -10,9 +10,9 @@ import paho.mqtt.client as mqtt
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
                     action="store")
-parser.add_argument("--host", help="Mosquitto host IP address", default='127.0.0.1',
+parser.add_argument("--host", help="Mosquitto host IP address", default='192.168.1.107',
                     action="store")
-parser.add_argument("--port", help="Mosquitto host port", default=1884, type=int,
+parser.add_argument("--port", help="Mosquitto host port", default=1883, type=int,
                     action="store")                   
 args = parser.parse_args()
 
@@ -63,7 +63,7 @@ def on_receive_model_info(client, obj, msg):
     filename = data['filename']
     model_split = data['model_split'] # ! Not implemented on server side
     print(DEVICE_NAME + ' : ' + ' starting to download') # TODO Change this to better logging
-    url = 'http://127.0.0.1:8000/' + data['filename']
+    url = 'http://192.168.1.107:8000/' + data['filename']
     urllib.request.urlretrieve(url, DEVICE_NAME + '_model.h5')
     print(DEVICE_NAME + ' : ' + ' download complete') # TODO Change this to better logging
 
@@ -93,7 +93,7 @@ client.on_connect = on_connect
 client.message_callback_add(DEVICE_NAME + "/tasks", on_task)
 client.message_callback_add("init/models", on_receive_model_info)
 # * Connect client
-client.connect("127.0.0.1", port=1884)
+client.connect("192.168.1.107", port=1883)
 time.sleep(2)
 # * Subscribe to message topics
 client.subscribe("devices/status")

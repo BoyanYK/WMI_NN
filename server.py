@@ -45,7 +45,7 @@ def on_status(client, obj, msg):
                 # ?     layers_to = 7,
                 # ?     output_receiver = '{DEVICE_NAME}'
                 # ? } 
-            }
+            },
             "for": devices[1]
         }
         client.publish('init/models', json.dumps(task))
@@ -62,7 +62,7 @@ client.on_connect = on_connect
 # * Register event handlers for incoming messages
 client.message_callback_add("devices/status", on_status)
 client.message_callback_add("output/results", on_output)
-client.connect("127.0.0.1", port=1884)
+client.connect("127.0.0.1", port=1883)
 # * Start a webserver to handle file downloads in a new thread
 fServer = Thread(target=fileserver.start_server)
 fServer.start()

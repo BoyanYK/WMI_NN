@@ -109,3 +109,5 @@ venv.bak/
  
 # except keras test
 !keras_mnist_cnn.h5
+
+.idea/
