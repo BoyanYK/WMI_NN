@@ -10,7 +10,7 @@ import paho.mqtt.client as mqtt
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
                     action="store")
-parser.add_argument("--host", help="Mosquitto host IP address", default='127.0.0.1'
+parser.add_argument("--host", help="Mosquitto host IP address", default='127.0.0.1',
                     action="store")
 parser.add_argument("--port", help="Mosquitto host port", default=1884, type=int,
                     action="store")                   
@@ -81,7 +81,7 @@ def process_actions(client):
     Main background thread loop to keep things going
     """
     while True:
-        if data_queue.empty() not True:
+        if data_queue.empty() == False:
             run_inference(client, data_queue.get())
         else:
             time.sleep(0.01)
