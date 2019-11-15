@@ -45,7 +45,7 @@ def on_status(client, obj, msg):
                 # ?     layers_to = 7,
                 # ?     output_receiver = '{DEVICE_NAME}'
                 # ? } 
-            }
+            },
             "for": devices[1]
         }
         client.publish('init/models', json.dumps(task))
