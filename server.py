@@ -40,14 +40,19 @@ def on_status(client, obj, msg):
             "filename": 'keras_mnist_cnn.h5',
             "model_split": {
                 # TODO Per Device model splits
-                # ? '{DEVICE_NAME}' = {
-                # ?     layers_from = 3,
-                # ?     layers_to = 7,
-                # ?     output_receiver = '{DEVICE_NAME}'
-                # ? } 
-            },
-            "for": devices[1]
+                devices[0]: {
+                    "layers_from": 0,
+                    "layers_to": 3,
+                    "output_receiver": devices[1]
+                },
+                devices[1]: {
+                    "layers_from": 3,
+                    "layers_to": -1,
+                    "output_receiver": 'output'
+                } 
+            }
         }
+        print(task)
         client.publish('init/models', json.dumps(task))
 
 def on_output(client, obj, msg):
