@@ -1,12 +1,8 @@
-import paho.mqtt.client as mqtt
-from threading import Thread
 import json
 
 import numpy as np
-import keras
 from keras import datasets as datasets
-from keras import backend as K
-from keras.models import Model, load_model, Sequential
+
 
 def prepare_inputs():
     """Prepares inputs to the correct format and shape"""

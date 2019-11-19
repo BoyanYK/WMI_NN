@@ -1,12 +1,11 @@
-import paho.mqtt.client as mqtt
 import argparse
-import time
 import json
+from threading import Thread
+
+import paho.mqtt.client as mqtt
 
 import fileserver
 import server_model
-
-from threading import Thread
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",

@@ -1,19 +1,14 @@
 import argparse
 import json
-import pickle
+import queue
 import time
 import urllib.request
-import queue
-import numpy as np
-
-import keras
-from keras.models import Model, load_model, Sequential
-from keras.layers import Input, Dense, InputLayer
-from keras.optimizers import RMSprop
-
-import paho.mqtt.client as mqtt
-
 from threading import Thread
+
+import numpy as np
+import paho.mqtt.client as mqtt
+from keras.layers import InputLayer
+from keras.models import load_model, Sequential
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
