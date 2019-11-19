@@ -37,7 +37,7 @@ st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 print(st)
 print("END DRY RUN")
 count = 0
-y = 10
+y = 100
 for x in range(y):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
