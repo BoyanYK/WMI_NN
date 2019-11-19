@@ -29,13 +29,6 @@ LOADED_MODEL = {}
 data_queue = queue.Queue()
 is_inferencing = False
 model_split = {} # * Object that contains information on how neural network should be split
-# ? sample_model_split = {
-# ?     '{DEVICE_NAME}' = {
-# ?         layers_from = 3,
-# ?         layers_to = 7,
-# ?         output_receiver = '{DEVICE_NAME}'
-# ?     } 
-# ? }
 
 # TODO Move these functions to another file
 def split_model_on(model, from_layer, to_layer):
@@ -75,44 +68,22 @@ def on_connect(client, userdata, flags, rc):
 def on_task(client, obj, msg):
     """
     Handler for receiving new data items in the message queue topic
-    TODO Add them to an item queue that the model reads from
+    Adds them to a queue
     """
     task = json.loads(msg.payload)
-    # data = task['data']
-    # target = task['for']
-    # result = 22 * data
-    # time.sleep(2)
-    # new_task = {
-    #     'data': result,
-    #     'for': 'output'
-    # }
     data_queue.put(task)
-    is_inferencing = task['is_inferencing']
-    # ? Likely to be deleted 
-    # recipient = target + '/tasks'
-    # if target == 'output':
-    #     recipient = 'output/results'
-    # client.publish(recipient, json.dumps(new_task))
+    is_inferencing = task['is_inferencing'] # ? Possibly unnecessary
 
 def on_receive_model_info(client, obj, msg):
     """Handle downloading of neural network model"""
     data = json.loads(msg.payload)
     filename = data['filename']
-    model_split = data['model_split'] # ! Not implemented on server side
+    model_split = data['model_split']
     print(DEVICE_NAME + ' : ' + ' starting to download') # TODO Change this to better logging
     url = 'http://127.0.0.1:8000/' + data['filename']
     urllib.request.urlretrieve(url, DEVICE_NAME + '_model.h5')
     print(DEVICE_NAME + ' : ' + ' download complete') # TODO Change this to better logging
     prepare_model(client, DEVICE_NAME + '_model.h5', model_split)
-
-# def run_inference(client, item):
-#     """
-#     Run inference and forward the results to the next device's message topic
-#     """
-#     time.sleep(2)
-#     recipient = model_split[DEVICE_NAME]['output_receiver'] + '/tasks'
-#     result = item['data'] # TODO Run actual prediction here
-#     client.publish(recipient, json.dumps(output))
 
 def process_actions(client):
     """
@@ -133,7 +104,6 @@ def process_actions(client):
                     'for': devices[1:],
                     'is_inferencing': True
                 }
-                print(output)
                 client.publish(recipient + '/tasks', json.dumps(output))
             # * If last device, publish output
             else:
@@ -154,9 +124,6 @@ time.sleep(2)
 client.subscribe("devices/init")
 client.subscribe("init/models")
 client.subscribe(DEVICE_NAME + "/tasks")
-
-# ! Delete Later
-client.subscribe("wakeup")
 
 # * Publish status
 message = {

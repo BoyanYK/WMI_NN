@@ -4,13 +4,9 @@ import time
 import json
 
 import fileserver
-from threading import Thread
+import server_model
 
-import numpy as np
-import keras
-from keras.datasets import mnist
-from keras import backend as K
-from keras.models import Model, load_model, Sequential
+from threading import Thread
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
@@ -32,30 +28,6 @@ def on_connect(client, userdata, flags, rc):
     else:
         print("Bad connection Returned code=",rc)
 
-def prepare_inputs():
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-    # input image dimensions
-    img_rows, img_cols = 28, 28
-
-    # if K.image_data_format() == 'channels_first':
-    x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
-    x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_cols)
-    input_shape = (1, img_rows, img_cols)
-    # else:
-    #     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-    #     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
-    #     input_shape = (img_rows, img_cols, 1)
-
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    x_train /= 255
-    x_test /= 255
-    print('x_train shape:', x_train.shape)
-    print(x_train.shape[0], 'train samples')
-    print(x_test.shape[0], 'test samples')
-    return (x_train, y_train), (x_test, y_test)
-
 def on_model_loaded(client, obj, msg):
     """Confirm that all devices have loaded their part of the model successfully"""
     message = json.loads(msg.payload)
@@ -63,28 +35,8 @@ def on_model_loaded(client, obj, msg):
     loaded_parts.append(message['from'])
     if len(set(loaded_parts)) == DEVICE_COUNT:
         print('about to go to send inputs')
-        inference = Thread(target=send_inputs, args=(client,))
+        inference = Thread(target=server_model.send_inputs, args=(client,devices))
         inference.start()
-
-def send_inputs(client):
-    print('About to prepare inputs')
-    (x_train, y_train), (x_test, y_test) = prepare_inputs()
-    print('Prepared inputs')
-    inputs = x_train[:4]
-    outputs = y_train[:4]
-
-    print('@@ EXPECTED OUTPUTS @@')
-    print(outputs)
-    print('@@ ---------------- @@')
-    device = devices[0]
-    for image in inputs:
-        image = np.array([image])
-        task = {
-            'data': image.tolist(),
-            'for': devices[1:], # * List of recipients (aka 1 to last)
-            'is_inferencing': True
-        }
-        client.publish(device + '/tasks', json.dumps(task))
 
 def on_init(client, obj, msg):
     """
@@ -99,7 +51,7 @@ def on_init(client, obj, msg):
         task = {
             "filename": 'keras_mnist_cnn.h5',
             "model_split": {
-                # TODO Per Device model splits
+                # TODO Not have this hardcoded
                 devices[0]: {
                     "layers_from": 0,
                     "layers_to": 3,
