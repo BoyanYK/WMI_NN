@@ -2,10 +2,11 @@ import paho.mqtt.client as mqtt
 import argparse
 import time
 import json
-import keras
+
 import fileserver
+import server_model
+
 from threading import Thread
-from keras.models import Model, load_model, Sequential
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
@@ -18,6 +19,7 @@ DEVICE_NAME = args.name
 DEVICE_COUNT = args.devices
 
 devices = []
+loaded_parts = []
 
 def on_connect(client, userdata, flags, rc):
     """Handles initial connection to Mosquitto Broker"""
@@ -26,7 +28,17 @@ def on_connect(client, userdata, flags, rc):
     else:
         print("Bad connection Returned code=",rc)
 
-def on_status(client, obj, msg):
+def on_model_loaded(client, obj, msg):
+    """Confirm that all devices have loaded their part of the model successfully"""
+    message = json.loads(msg.payload)
+    print(message)
+    loaded_parts.append(message['from'])
+    if len(set(loaded_parts)) == DEVICE_COUNT:
+        print('about to go to send inputs')
+        inference = Thread(target=server_model.send_inputs, args=(client,devices))
+        inference.start()
+
+def on_init(client, obj, msg):
     """
     Deals with new connected devices. Once all devices have successfully connected
     execution can start
@@ -39,36 +51,43 @@ def on_status(client, obj, msg):
         task = {
             "filename": 'keras_mnist_cnn.h5',
             "model_split": {
-                # TODO Per Device model splits
-                # ? '{DEVICE_NAME}' = {
-                # ?     layers_from = 3,
-                # ?     layers_to = 7,
-                # ?     output_receiver = '{DEVICE_NAME}'
-                # ? } 
-            },
-            "for": devices[1]
+                # TODO Not have this hardcoded
+                devices[0]: {
+                    "layers_from": 0,
+                    "layers_to": 3,
+                    "output_receiver": devices[1]
+                },
+                devices[1]: {
+                    "layers_from": 3,
+                    "layers_to": -1,
+                    "output_receiver": 'output'
+                } 
+            }
         }
+        print(task)
         client.publish('init/models', json.dumps(task))
 
 def on_output(client, obj, msg):
     """Handle execution output"""
     result = json.loads(msg.payload)
     print('OUTPUT')
-    print(result['data'])
+    print(result)
 
 # * Initialise client and connect to broker
 client = mqtt.Client(DEVICE_NAME)
 client.on_connect = on_connect
 # * Register event handlers for incoming messages
-client.message_callback_add("devices/status", on_status)
+client.message_callback_add("devices/init", on_init)
+client.message_callback_add("devices/model_loaded", on_model_loaded)
 client.message_callback_add("output/results", on_output)
-client.connect("127.0.0.1", port=1883)
+client.connect("127.0.0.1", port=1884)
 # * Start a webserver to handle file downloads in a new thread
 fServer = Thread(target=fileserver.start_server)
 fServer.start()
 # * Notify devices that the server is on and subscribe to interesting channels
-client.publish("devices/status","SERVER: ON")
-client.subscribe("devices/status")
+client.publish("devices/init","SERVER: ON")
+client.subscribe("devices/init")
 client.subscribe("output/results")
+client.subscribe("devices/model_loaded")
 # * Keep MQTT client running in order to handle new incoming requests
 client.loop_forever()
