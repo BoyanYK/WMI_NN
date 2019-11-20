@@ -1,6 +1,7 @@
 from keras.applications.xception import Xception #shite
 from keras.applications.densenet import DenseNet121 #shite
 from keras.applications.mobilenet import MobileNet #works
+from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.applications.nasnet import NASNetMobile
 from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
@@ -33,10 +34,10 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 print(st)
 
-model = MobileNet(include_top=True, weights='imagenet', input_tensor=None, classes=1000)
-part1 = split_model_on(model, 0, 78)
+model = InceptionResNetV2(include_top=True, weights='imagenet', input_tensor=None, classes=1000)
+part1 = split_model_on(model, 0, 100)
 part1.summary()
-part2 = split_model_on(model, 78, -1)
+part2 = split_model_on(model, 100, -1)
 part2.summary()
 # image = load_img('dog.jpg', target_size=(299, 299))
 # # convert the image pixels to a numpy array
