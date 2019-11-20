@@ -5,8 +5,10 @@ import time
 import urllib.request
 import queue
 import numpy as np
+import time
 
 import keras
+from keras.applications.mobilenet import MobileNet
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input, Dense, InputLayer
 from keras.optimizers import RMSprop
@@ -49,9 +51,10 @@ def split_model_on(model, from_layer, to_layer):
 def prepare_model(client, modelpath, model_split):
     global LOADED_MODEL
     print(DEVICE_NAME + " : attempting to load model")
-    LOADED_MODEL = load_model(modelpath)
+    LOADED_MODEL = MobileNet()
+    LOADED_MODEL.load_weights(modelpath)
     LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
-    LOADED_MODEL.summary()
+    # LOADED_MODEL.summary()
     client.publish("devices/model_loaded", json.dumps({
         'from': DEVICE_NAME,
         'status': 'MODEL LOADED'
@@ -99,15 +102,16 @@ def process_actions(client):
             # * Send output to next device
             if len(devices) != 0:
                 recipient = devices[0]
-                output = {
-                    'data': result.tolist(),
-                    'for': devices[1:],
-                    'is_inferencing': True
-                }
+                output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
                 client.publish(recipient + '/tasks', json.dumps(output))
             # * If last device, publish output
             else:
-                client.publish('output/results', json.dumps(result.tolist()))
+                output = {
+                    'data': result.tolist(),
+                    'started': task['started'],
+                    'ended': time.time()
+                }
+                client.publish('output/results', json.dumps(output))
         else:
             time.sleep(0.01)
 

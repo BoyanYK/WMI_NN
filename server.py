@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import argparse
 import time
 import json
+import time
 
 import fileserver
 import server_model
@@ -49,16 +50,16 @@ def on_init(client, obj, msg):
     # * If all devices have connected tell them to download model
     if len(devices) == DEVICE_COUNT:
         task = {
-            "filename": 'keras_mnist_cnn.h5',
+            "filename": 'mobilenet.h5',
             "model_split": {
                 # TODO Not have this hardcoded
                 devices[0]: {
                     "layers_from": 0,
-                    "layers_to": 3,
+                    "layers_to": 78,
                     "output_receiver": devices[1]
                 },
                 devices[1]: {
-                    "layers_from": 3,
+                    "layers_from": 78,
                     "layers_to": -1,
                     "output_receiver": 'output'
                 } 
@@ -69,9 +70,17 @@ def on_init(client, obj, msg):
 
 def on_output(client, obj, msg):
     """Handle execution output"""
+    ended = time.time()
     result = json.loads(msg.payload)
-    print('OUTPUT')
-    print(result)
+    started = result['started']
+    device_ended = result['ended']
+    print('#@#@#@#@#@ OUTPUT #@#@#@#@#@')
+    print('started:' + str(started) + " ended: " + str(ended))
+    print('Duration: ' + str(ended - started))
+    print('Device Ended: ' + str(device_ended) + " Server ended: " + str(ended))
+    print('Difference: ' + str(ended - device_ended))
+    print('#@#@#@#@#@ END OF OUTPUT #@#@#@#@#@')
+
 
 # * Initialise client and connect to broker
 client = mqtt.Client(DEVICE_NAME)
