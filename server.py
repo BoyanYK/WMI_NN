@@ -1,12 +1,13 @@
+import paho.mqtt.client as mqtt
 import argparse
 import json
-from threading import Thread
 import time
-
-import paho.mqtt.client as mqtt
+import datetime
 
 import fileserver
 import server_model
+
+from threading import Thread
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
@@ -49,7 +50,7 @@ def on_init(client, obj, msg):
     # * If all devices have connected tell them to download model
     if len(devices) == DEVICE_COUNT:
         task = {
-            "filename": 'keras_mnist_cnn.h5',
+            "filename": 'mobilenet.h5',
             "model_split": {
                 # TODO Not have this hardcoded
                 devices[0]: {
@@ -61,7 +62,7 @@ def on_init(client, obj, msg):
                     "layers_from": 78,
                     "layers_to": -1,
                     "output_receiver": 'output'
-                } 
+                }
             }
         }
         print(task)
@@ -71,9 +72,19 @@ def on_output(client, obj, msg):
     """Handle execution output"""
     ended = time.time()
     result = json.loads(msg.payload)
-    print('OUTPUT')
-    print('started:' + str(result['started']) + " ended: " + str(ended))
-    print('Duration: ' + str(ended - result['started']))
+    started = result['started']
+    device_ended = result['ended']
+    # print('#@#@#@#@#@ OUTPUT #@#@#@#@#@')
+    # print('started:' + str(started) + " ended: " + str(ended))
+    # print('Duration: ' + str(ended - started))
+    # print('Device Ended: ' + str(device_ended) + " Server ended: " + str(ended))
+    # print('Difference: ' + str(ended - device_ended))
+    # print('#@#@#@#@#@ END OF OUTPUT #@#@#@#@#@')
+    f = open("time.txt", "r")
+    t = float(f.read())
+    tt = datetime.datetime.strptime(time.ctime(t), "%a %b %d %H:%M:%S %Y")
+    print(ended - tt.timestamp())
+
 
 # * Initialise client and connect to broker
 client = mqtt.Client(DEVICE_NAME)

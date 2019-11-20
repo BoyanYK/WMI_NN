@@ -1,22 +1,29 @@
 import argparse
 import json
-import queue
+import pickle
 import time
 import urllib.request
-from threading import Thread
-
+import queue
 import numpy as np
+import time
+
+import keras
+from keras.applications.mobilenet import MobileNet
+from keras.models import Model, load_model, Sequential
+from keras.layers import Input, Dense, InputLayer
+from keras.optimizers import RMSprop
+
 import paho.mqtt.client as mqtt
-from keras.layers import InputLayer
-from keras.models import load_model, Sequential
+
+from threading import Thread
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", help="Device ID that must send the weather data",
                     action="store")
-parser.add_argument("--host", help="Mosquitto host IP address", default='192.168.1.107',
+parser.add_argument("--host", help="Mosquitto host IP address", default='127.0.0.1',
                     action="store")
-parser.add_argument("--port", help="Mosquitto host port", default=1883, type=int,
-                    action="store")                   
+parser.add_argument("--port", help="Mosquitto host port", default=1884, type=int,
+                    action="store")
 args = parser.parse_args()
 
 DEVICE_NAME = args.name
@@ -44,14 +51,15 @@ def split_model_on(model, from_layer, to_layer):
 def prepare_model(client, modelpath, model_split):
     global LOADED_MODEL
     print(DEVICE_NAME + " : attempting to load model")
-    LOADED_MODEL = load_model(modelpath)
+    LOADED_MODEL = MobileNet()
+    LOADED_MODEL.load_weights(modelpath)
     LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
-    LOADED_MODEL.summary()
+    # LOADED_MODEL.summary()
     client.publish("devices/model_loaded", json.dumps({
         'from': DEVICE_NAME,
         'status': 'MODEL LOADED'
     }))
-# TODO ^ 
+# TODO ^
 
 def on_connect(client, userdata, flags, rc):
     """Handles initial connection to Mosquitto Broker"""
@@ -75,7 +83,7 @@ def on_receive_model_info(client, obj, msg):
     filename = data['filename']
     model_split = data['model_split']
     print(DEVICE_NAME + ' : ' + ' starting to download') # TODO Change this to better logging
-    url = 'http://192.168.1.107:8000/' + data['filename']
+    url = 'http://127.0.0.1:8000/' + data['filename']
     urllib.request.urlretrieve(url, DEVICE_NAME + '_model.h5')
     print(DEVICE_NAME + ' : ' + ' download complete') # TODO Change this to better logging
     prepare_model(client, DEVICE_NAME + '_model.h5', model_split)
@@ -94,16 +102,16 @@ def process_actions(client):
             # * Send output to next device
             if len(devices) != 0:
                 recipient = devices[0]
-                output = {
-                    'data': result.tolist(),
-                    'for': devices[1:],
-                    'is_inferencing': True,
-                    'started': task['started']
-                }
+                output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
                 client.publish(recipient + '/tasks', json.dumps(output))
             # * If last device, publish output
             else:
-                client.publish('output/results', json.dumps(result.tolist()))
+                output = {
+                    'data': result.tolist(),
+                    'started': task['started'],
+                    'ended': time.time()
+                }
+                client.publish('output/results', json.dumps(output))
         else:
             time.sleep(0.01)
 
@@ -114,7 +122,7 @@ client.on_connect = on_connect
 client.message_callback_add(DEVICE_NAME + "/tasks", on_task)
 client.message_callback_add("init/models", on_receive_model_info)
 # * Connect client
-client.connect("192.168.1.107", port=1883)
+client.connect("127.0.0.1", port=1884)
 time.sleep(2)
 # * Subscribe to message topics
 client.subscribe("devices/init")
