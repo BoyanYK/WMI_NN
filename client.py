@@ -97,7 +97,8 @@ def process_actions(client):
                 output = {
                     'data': result.tolist(),
                     'for': devices[1:],
-                    'is_inferencing': True
+                    'is_inferencing': True,
+                    'started': task['started']
                 }
                 client.publish(recipient + '/tasks', json.dumps(output))
             # * If last device, publish output

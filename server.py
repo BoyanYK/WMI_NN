@@ -1,6 +1,7 @@
 import argparse
 import json
 from threading import Thread
+import time
 
 import paho.mqtt.client as mqtt
 
@@ -53,11 +54,11 @@ def on_init(client, obj, msg):
                 # TODO Not have this hardcoded
                 devices[0]: {
                     "layers_from": 0,
-                    "layers_to": 3,
+                    "layers_to": 78,
                     "output_receiver": devices[1]
                 },
                 devices[1]: {
-                    "layers_from": 3,
+                    "layers_from": 78,
                     "layers_to": -1,
                     "output_receiver": 'output'
                 } 
@@ -68,9 +69,11 @@ def on_init(client, obj, msg):
 
 def on_output(client, obj, msg):
     """Handle execution output"""
+    ended = time.time()
     result = json.loads(msg.payload)
     print('OUTPUT')
-    print(result)
+    print('started:' + str(result['started']) + " ended: " + str(ended))
+    print('Duration: ' + str(ended - result['started']))
 
 # * Initialise client and connect to broker
 client = mqtt.Client(DEVICE_NAME)

@@ -1,6 +1,7 @@
 import json
 
 import numpy as np
+import time
 from keras import datasets as datasets
 
 
@@ -41,6 +42,8 @@ def send_inputs(client, devices):
         task = {
             'data': image.tolist(),
             'for': devices[1:], # * List of recipients (aka 1 to last)
-            'is_inferencing': True
+            'is_inferencing': True,
+            'started': time.time()
         }
         client.publish(device + '/tasks', json.dumps(task))
+        #write loop index and timestamp to file
