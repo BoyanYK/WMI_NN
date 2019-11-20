@@ -1,0 +1,409 @@
+Using MXNet backend
+BEGIN DRY RUN
+2019-11-19 23:57:54
+necklace (64.20%)
+2019-11-19 23:58:53
+END DRY RUN
+start run:0 2019-11-19 23:58:53
+necklace (64.20%)
+end run:0 2019-11-19 23:59:37 total seconds: 43.32711482048035
+ 
+start run:1 2019-11-19 23:59:37
+necklace (64.20%)
+end run:1 2019-11-20 00:00:22 total seconds: 45.122530460357666
+ 
+start run:2 2019-11-20 00:00:22
+necklace (64.20%)
+end run:2 2019-11-20 00:01:33 total seconds: 71.18347907066345
+ 
+start run:3 2019-11-20 00:01:33
+necklace (64.20%)
+end run:3 2019-11-20 00:02:17 total seconds: 43.65911674499512
+ 
+start run:4 2019-11-20 00:02:17
+necklace (64.20%)
+end run:4 2019-11-20 00:03:06 total seconds: 49.1601996421814
+ 
+start run:5 2019-11-20 00:03:06
+necklace (64.20%)
+end run:5 2019-11-20 00:03:50 total seconds: 44.37384343147278
+ 
+start run:6 2019-11-20 00:03:50
+necklace (64.20%)
+end run:6 2019-11-20 00:04:34 total seconds: 43.63113808631897
+ 
+start run:7 2019-11-20 00:04:34
+necklace (64.20%)
+end run:7 2019-11-20 00:05:17 total seconds: 43.09113883972168
+ 
+start run:8 2019-11-20 00:05:17
+necklace (64.20%)
+end run:8 2019-11-20 00:06:01 total seconds: 43.47681021690369
+ 
+start run:9 2019-11-20 00:06:01
+necklace (64.20%)
+end run:9 2019-11-20 00:06:44 total seconds: 43.27054738998413
+ 
+start run:10 2019-11-20 00:06:44
+necklace (64.20%)
+end run:10 2019-11-20 00:07:27 total seconds: 42.85274791717529
+ 
+start run:11 2019-11-20 00:07:27
+necklace (64.20%)
+end run:11 2019-11-20 00:08:10 total seconds: 43.07191348075867
+ 
+start run:12 2019-11-20 00:08:10
+necklace (64.20%)
+end run:12 2019-11-20 00:08:53 total seconds: 43.14875054359436
+ 
+start run:13 2019-11-20 00:08:53
+necklace (64.20%)
+end run:13 2019-11-20 00:09:36 total seconds: 43.265039920806885
+ 
+start run:14 2019-11-20 00:09:36
+necklace (64.20%)
+end run:14 2019-11-20 00:10:19 total seconds: 43.163464069366455
+ 
+start run:15 2019-11-20 00:10:19
+necklace (64.20%)
+end run:15 2019-11-20 00:11:02 total seconds: 43.047489166259766
+ 
+start run:16 2019-11-20 00:11:02
+necklace (64.20%)
+end run:16 2019-11-20 00:11:45 total seconds: 43.03597664833069
+ 
+start run:17 2019-11-20 00:11:45
+necklace (64.20%)
+end run:17 2019-11-20 00:12:29 total seconds: 43.31337857246399
+ 
+start run:18 2019-11-20 00:12:29
+necklace (64.20%)
+end run:18 2019-11-20 00:13:12 total seconds: 43.553773403167725
+ 
+start run:19 2019-11-20 00:13:12
+necklace (64.20%)
+end run:19 2019-11-20 00:13:56 total seconds: 43.437365770339966
+ 
+start run:20 2019-11-20 00:13:56
+necklace (64.20%)
+end run:20 2019-11-20 00:14:39 total seconds: 43.27537536621094
+ 
+start run:21 2019-11-20 00:14:39
+necklace (64.20%)
+end run:21 2019-11-20 00:15:22 total seconds: 43.08600616455078
+ 
+start run:22 2019-11-20 00:15:22
+necklace (64.20%)
+end run:22 2019-11-20 00:16:05 total seconds: 43.21327471733093
+ 
+start run:23 2019-11-20 00:16:05
+necklace (64.20%)
+end run:23 2019-11-20 00:16:48 total seconds: 42.898104667663574
+ 
+start run:24 2019-11-20 00:16:48
+necklace (64.20%)
+end run:24 2019-11-20 00:17:32 total seconds: 43.68626689910889
+ 
+start run:25 2019-11-20 00:17:32
+necklace (64.20%)
+end run:25 2019-11-20 00:18:15 total seconds: 43.03435444831848
+ 
+start run:26 2019-11-20 00:18:15
+necklace (64.20%)
+end run:26 2019-11-20 00:18:58 total seconds: 43.34332275390625
+ 
+start run:27 2019-11-20 00:18:58
+necklace (64.20%)
+end run:27 2019-11-20 00:19:41 total seconds: 42.89168620109558
+ 
+start run:28 2019-11-20 00:19:41
+necklace (64.20%)
+end run:28 2019-11-20 00:20:25 total seconds: 43.4275324344635
+ 
+start run:29 2019-11-20 00:20:25
+necklace (64.20%)
+end run:29 2019-11-20 00:21:08 total seconds: 43.688581705093384
+ 
+start run:30 2019-11-20 00:21:08
+necklace (64.20%)
+end run:30 2019-11-20 00:32:09 total seconds: 660.4615833759308
+ 
+start run:31 2019-11-20 00:32:09
+necklace (64.20%)
+end run:31 2019-11-20 00:32:52 total seconds: 43.352468729019165
+ 
+start run:32 2019-11-20 00:32:52
+necklace (64.20%)
+end run:32 2019-11-20 00:33:36 total seconds: 43.68091320991516
+ 
+start run:33 2019-11-20 00:33:36
+necklace (64.20%)
+end run:33 2019-11-20 00:34:19 total seconds: 43.2627477645874
+ 
+start run:34 2019-11-20 00:34:19
+necklace (64.20%)
+end run:34 2019-11-20 00:35:02 total seconds: 43.102752923965454
+ 
+start run:35 2019-11-20 00:35:02
+necklace (64.20%)
+end run:35 2019-11-20 00:35:45 total seconds: 43.23948693275452
+ 
+start run:36 2019-11-20 00:35:45
+necklace (64.20%)
+end run:36 2019-11-20 00:36:28 total seconds: 42.958789110183716
+ 
+start run:37 2019-11-20 00:36:28
+necklace (64.20%)
+end run:37 2019-11-20 00:37:11 total seconds: 42.98640441894531
+ 
+start run:38 2019-11-20 00:37:11
+necklace (64.20%)
+end run:38 2019-11-20 00:37:55 total seconds: 43.49949026107788
+ 
+start run:39 2019-11-20 00:37:55
+necklace (64.20%)
+end run:39 2019-11-20 00:38:38 total seconds: 42.941566705703735
+ 
+start run:40 2019-11-20 00:38:38
+necklace (64.20%)
+end run:40 2019-11-20 00:39:21 total seconds: 42.8740119934082
+ 
+start run:41 2019-11-20 00:39:21
+necklace (64.20%)
+end run:41 2019-11-20 00:40:04 total seconds: 43.4738085269928
+ 
+start run:42 2019-11-20 00:40:04
+necklace (64.20%)
+end run:42 2019-11-20 00:40:47 total seconds: 43.150007247924805
+ 
+start run:43 2019-11-20 00:40:47
+necklace (64.20%)
+end run:43 2019-11-20 00:41:30 total seconds: 43.13357639312744
+ 
+start run:44 2019-11-20 00:41:30
+necklace (64.20%)
+end run:44 2019-11-20 00:42:13 total seconds: 42.78494739532471
+ 
+start run:45 2019-11-20 00:42:13
+necklace (64.20%)
+end run:45 2019-11-20 00:42:56 total seconds: 42.92985510826111
+ 
+start run:46 2019-11-20 00:42:56
+necklace (64.20%)
+end run:46 2019-11-20 00:43:40 total seconds: 43.388967514038086
+ 
+start run:47 2019-11-20 00:43:40
+necklace (64.20%)
+end run:47 2019-11-20 00:44:23 total seconds: 43.23951005935669
+ 
+start run:48 2019-11-20 00:44:23
+necklace (64.20%)
+end run:48 2019-11-20 00:45:06 total seconds: 43.25402092933655
+ 
+start run:49 2019-11-20 00:45:06
+necklace (64.20%)
+end run:49 2019-11-20 00:45:49 total seconds: 43.06952381134033
+ 
+start run:50 2019-11-20 00:45:49
+necklace (64.20%)
+end run:50 2019-11-20 00:46:32 total seconds: 42.98684072494507
+ 
+start run:51 2019-11-20 00:46:32
+necklace (64.20%)
+end run:51 2019-11-20 00:47:15 total seconds: 42.878361225128174
+ 
+start run:52 2019-11-20 00:47:15
+necklace (64.20%)
+end run:52 2019-11-20 00:47:58 total seconds: 42.945318937301636
+ 
+start run:53 2019-11-20 00:47:58
+necklace (64.20%)
+end run:53 2019-11-20 00:48:41 total seconds: 42.91387128829956
+ 
+start run:54 2019-11-20 00:48:41
+necklace (64.20%)
+end run:54 2019-11-20 00:49:24 total seconds: 43.10088062286377
+ 
+start run:55 2019-11-20 00:49:24
+necklace (64.20%)
+end run:55 2019-11-20 00:50:08 total seconds: 43.73373627662659
+ 
+start run:56 2019-11-20 00:50:08
+necklace (64.20%)
+end run:56 2019-11-20 00:50:51 total seconds: 42.94400382041931
+ 
+start run:57 2019-11-20 00:50:51
+necklace (64.20%)
+end run:57 2019-11-20 00:51:33 total seconds: 42.77105259895325
+ 
+start run:58 2019-11-20 00:51:33
+necklace (64.20%)
+end run:58 2019-11-20 00:52:16 total seconds: 42.99795889854431
+ 
+start run:59 2019-11-20 00:52:16
+necklace (64.20%)
+end run:59 2019-11-20 00:53:00 total seconds: 43.294732093811035
+ 
+start run:60 2019-11-20 00:53:00
+necklace (64.20%)
+end run:60 2019-11-20 00:53:43 total seconds: 43.179362773895264
+ 
+start run:61 2019-11-20 00:53:43
+necklace (64.20%)
+end run:61 2019-11-20 00:54:26 total seconds: 43.04625391960144
+ 
+start run:62 2019-11-20 00:54:26
+necklace (64.20%)
+end run:62 2019-11-20 00:55:09 total seconds: 43.0180561542511
+ 
+start run:63 2019-11-20 00:55:09
+necklace (64.20%)
+end run:63 2019-11-20 00:55:52 total seconds: 43.47981119155884
+ 
+start run:64 2019-11-20 00:55:52
+necklace (64.20%)
+end run:64 2019-11-20 00:56:35 total seconds: 43.08690309524536
+ 
+start run:65 2019-11-20 00:56:35
+necklace (64.20%)
+end run:65 2019-11-20 00:57:18 total seconds: 42.989261627197266
+ 
+start run:66 2019-11-20 00:57:18
+necklace (64.20%)
+end run:66 2019-11-20 00:58:02 total seconds: 43.076241970062256
+ 
+start run:67 2019-11-20 00:58:02
+necklace (64.20%)
+end run:67 2019-11-20 00:58:44 total seconds: 42.82491850852966
+ 
+start run:68 2019-11-20 00:58:44
+necklace (64.20%)
+end run:68 2019-11-20 00:59:27 total seconds: 42.951409339904785
+ 
+start run:69 2019-11-20 00:59:27
+necklace (64.20%)
+end run:69 2019-11-20 01:00:10 total seconds: 42.789783239364624
+ 
+start run:70 2019-11-20 01:00:10
+necklace (64.20%)
+end run:70 2019-11-20 01:00:53 total seconds: 43.28914833068848
+ 
+start run:71 2019-11-20 01:00:53
+necklace (64.20%)
+end run:71 2019-11-20 01:01:36 total seconds: 42.930824518203735
+ 
+start run:72 2019-11-20 01:01:36
+necklace (64.20%)
+end run:72 2019-11-20 01:02:19 total seconds: 42.97523880004883
+ 
+start run:73 2019-11-20 01:02:19
+necklace (64.20%)
+end run:73 2019-11-20 01:03:03 total seconds: 43.21267342567444
+ 
+start run:74 2019-11-20 01:03:03
+necklace (64.20%)
+end run:74 2019-11-20 01:03:46 total seconds: 43.12263369560242
+ 
+start run:75 2019-11-20 01:03:46
+necklace (64.20%)
+end run:75 2019-11-20 01:04:29 total seconds: 43.18767166137695
+ 
+start run:76 2019-11-20 01:04:29
+necklace (64.20%)
+end run:76 2019-11-20 01:05:12 total seconds: 42.79242181777954
+ 
+start run:77 2019-11-20 01:05:12
+necklace (64.20%)
+end run:77 2019-11-20 01:05:55 total seconds: 43.13249850273132
+ 
+start run:78 2019-11-20 01:05:55
+necklace (64.20%)
+end run:78 2019-11-20 01:06:38 total seconds: 42.904526233673096
+ 
+start run:79 2019-11-20 01:06:38
+necklace (64.20%)
+end run:79 2019-11-20 01:07:20 total seconds: 42.79744243621826
+ 
+start run:80 2019-11-20 01:07:20
+necklace (64.20%)
+end run:80 2019-11-20 01:08:03 total seconds: 42.99064230918884
+ 
+start run:81 2019-11-20 01:08:03
+necklace (64.20%)
+end run:81 2019-11-20 01:08:46 total seconds: 42.957289934158325
+ 
+start run:82 2019-11-20 01:08:46
+necklace (64.20%)
+end run:82 2019-11-20 01:09:30 total seconds: 43.29106640815735
+ 
+start run:83 2019-11-20 01:09:30
+necklace (64.20%)
+end run:83 2019-11-20 01:10:12 total seconds: 42.69813370704651
+ 
+start run:84 2019-11-20 01:10:12
+necklace (64.20%)
+end run:84 2019-11-20 01:10:55 total seconds: 42.950908184051514
+ 
+start run:85 2019-11-20 01:10:55
+necklace (64.20%)
+end run:85 2019-11-20 01:11:38 total seconds: 42.76462745666504
+ 
+start run:86 2019-11-20 01:11:38
+necklace (64.20%)
+end run:86 2019-11-20 01:12:21 total seconds: 43.154335737228394
+ 
+start run:87 2019-11-20 01:12:21
+necklace (64.20%)
+end run:87 2019-11-20 01:13:04 total seconds: 42.89257287979126
+ 
+start run:88 2019-11-20 01:13:04
+necklace (64.20%)
+end run:88 2019-11-20 01:13:47 total seconds: 42.84527945518494
+ 
+start run:89 2019-11-20 01:13:47
+necklace (64.20%)
+end run:89 2019-11-20 01:14:30 total seconds: 43.30974102020264
+ 
+start run:90 2019-11-20 01:14:30
+necklace (64.20%)
+end run:90 2019-11-20 01:15:13 total seconds: 42.97578763961792
+ 
+start run:91 2019-11-20 01:15:13
+necklace (64.20%)
+end run:91 2019-11-20 01:15:56 total seconds: 43.1316659450531
+ 
+start run:92 2019-11-20 01:15:56
+necklace (64.20%)
+end run:92 2019-11-20 01:16:40 total seconds: 43.186583042144775
+ 
+start run:93 2019-11-20 01:16:40
+necklace (64.20%)
+end run:93 2019-11-20 01:17:23 total seconds: 43.31145405769348
+ 
+start run:94 2019-11-20 01:17:23
+necklace (64.20%)
+end run:94 2019-11-20 01:18:06 total seconds: 43.23067831993103
+ 
+start run:95 2019-11-20 01:18:06
+necklace (64.20%)
+end run:95 2019-11-20 01:18:49 total seconds: 43.24895095825195
+ 
+start run:96 2019-11-20 01:18:49
+necklace (64.20%)
+end run:96 2019-11-20 01:19:33 total seconds: 43.541268825531006
+ 
+start run:97 2019-11-20 01:19:33
+necklace (64.20%)
+end run:97 2019-11-20 01:20:17 total seconds: 43.80298852920532
+ 
+start run:98 2019-11-20 01:20:17
+necklace (64.20%)
+end run:98 2019-11-20 01:21:00 total seconds: 43.40440511703491
+ 
+start run:99 2019-11-20 01:21:00
+necklace (64.20%)
+end run:99 2019-11-20 01:21:43 total seconds: 43.08441472053528
+ 
+total runs: 100
+total time taken: 4969.641387939453
+average time taken: 49.696413879394534
