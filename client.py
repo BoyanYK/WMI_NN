@@ -33,20 +33,48 @@ is_inferencing = False
 model_split = {} # * Object that contains information on how neural network should be split
 
 # TODO Move these functions to another file
-def split_model_on(model, from_layer, to_layer):
-    split_model = Sequential()
-    if from_layer == 0:
-        for current_layer in range(0, to_layer+1):
-            split_model.add(model.layers[current_layer])
-    elif to_layer == -1:
-        split_model.add(InputLayer(input_shape=model.layers[from_layer+1].input_shape[1:]))
-        for current_layer in range(from_layer+1, len(model.layers)):
-            split_model.add(model.layers[current_layer])
-    else:
-        split_model.add(InputLayer(input_shape=model.layers[from_layer+1].input_shape[1:]))
-        for current_layer in range(from_layer+1, to_layer+1):
-            split_model.add(model.layers[current_layer])
-    return split_model
+def split_model_on(model, starting_layer, end_layer):
+    # create a new input layer for our sub-model we want to construct
+    layer_name = model.layers[starting_layer].name
+    new_input = Input(batch_shape=model.layers[starting_layer].get_input_shape_at(0))
+
+    layer_outputs = {}
+    
+    def get_output_of_layer(layer):
+        # if we have already applied this layer on its input(s) tensors,
+        # just return its already computed output
+        if layer.name in layer_outputs:
+            return layer_outputs[layer.name]
+
+        # if this is the starting layer, then apply it on the input tensor
+        if layer.name == layer_name:
+            out = layer(new_input)
+            layer_outputs[layer.name] = out
+            return out
+
+        # find all the connected layers which this layer
+        # consumes their output
+        prev_layers = []
+        for node in layer._inbound_nodes:
+            prev_layers.extend(node.inbound_layers)
+
+        # get the output of connected layers
+        pl_outs = []
+        for pl in prev_layers:
+            pl_outs.extend([get_output_of_layer(pl)])
+
+        # apply this layer on the collected outputs
+        out = layer(pl_outs[0] if len(pl_outs) == 1 else pl_outs)
+        layer_outputs[layer.name] = out
+        return out
+
+    # note that we start from the last layer of our desired sub-model.
+    # this layer could be any layer of the original model as long as it is
+    # reachable from the starting layer
+    new_output = get_output_of_layer(model.layers[end_layer])
+
+    # create the sub-model
+    return Model(new_input, new_output)
 
 def prepare_model(client, modelpath, model_split):
     global LOADED_MODEL
