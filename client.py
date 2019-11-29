@@ -8,7 +8,7 @@ import numpy as np
 import time
 
 import keras
-from keras.applications.mobilenet import MobileNet
+
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input, Dense, InputLayer
 from keras.optimizers import RMSprop
@@ -76,10 +76,15 @@ def split_model_on(model, starting_layer, end_layer):
     # create the sub-model
     return Model(new_input, new_output)
 
-def prepare_model(client, modelpath, model_split):
+def prepare_model(client, modelpath, model_split, model_name):
     global LOADED_MODEL, graph
     print(DEVICE_NAME + " : attempting to load model")
-    LOADED_MODEL = MobileNet()
+    if "resnet" in model_name:
+        from keras.applications.resnet50 import ResNet50
+        LOADED_MODEL = ResNet50()
+    elif "mobilenet" in model_name:
+        from keras.applications.mobilenet import MobileNet
+        LOADED_MODEL = MobileNet()
     LOADED_MODEL.load_weights(modelpath)
     LOADED_MODEL._make_predict_function()
     LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
@@ -116,7 +121,7 @@ def on_receive_model_info(client, obj, msg):
     url = 'http://127.0.0.1:8000/' + data['filename']
     urllib.request.urlretrieve(url, DEVICE_NAME + '_model.h5')
     print(DEVICE_NAME + ' : ' + ' download complete') # TODO Change this to better logging
-    prepare_model(client, DEVICE_NAME + '_model.h5', model_split)
+    prepare_model(client, DEVICE_NAME + '_model.h5', model_split, data['filename'])
 
 def process_actions(client):
     """
