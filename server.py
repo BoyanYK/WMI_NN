@@ -10,14 +10,22 @@ import server_model
 from threading import Thread
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--name", help="Device ID that must send the weather data",
+parser.add_argument("--name", help="Device name",
                     action="store")
+parser.add_argument("--model", help="Model name",
+                    action="store", default='mobile_net')
+parser.add_argument("--config", help="Config filepath",
+                    action="store", default='configs.json')
 parser.add_argument("--devices", help="Number of devices that are going to connect",
                     action="store", default=2, type=int)
 args = parser.parse_args()
 
 DEVICE_NAME = args.name
 DEVICE_COUNT = args.devices
+MODEL_NAME = args.model
+with open(args.config) as json_file:
+    data = json.load(json_file)
+    CONFIG = data['models'][0][MODEL_NAME][str(DEVICE_COUNT)]
 
 devices = []
 loaded_parts = []
@@ -49,21 +57,23 @@ def on_init(client, obj, msg):
     devices.append(device)
     # * If all devices have connected tell them to download model
     if len(devices) == DEVICE_COUNT:
-        task = {
-            "filename": 'mobilenet.h5',
-            "model_split": {
-                # TODO Not have this hardcoded
-                devices[0]: {
-                    "layers_from": 0,
-                    "layers_to": 78,
-                    "output_receiver": devices[1]
-                },
-                devices[1]: {
-                    "layers_from": 78,
-                    "layers_to": -1,
-                    "output_receiver": 'output'
-                } 
+        model_split = {}
+        for dev in range(DEVICE_COUNT - 1):
+            model_split[devices[dev]] = {
+                "layers_from": CONFIG.pop(0),
+                "layers_to": CONFIG.pop(0),
+                "output_receiver": devices[dev+1]
             }
+            print(model_split)
+        model_split[devices[DEVICE_COUNT - 1]] = {
+            "layers_from": CONFIG.pop(0),
+            "layers_to": CONFIG.pop(0),
+            "output_receiver": "output"
+        }
+        print(model_split)
+        task = {
+            "filename": MODEL_NAME + '.h5',
+            "model_split": model_split
         }
         print(task)
         client.publish('init/models', json.dumps(task))

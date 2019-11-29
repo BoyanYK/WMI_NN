@@ -12,7 +12,7 @@ from keras.applications.mobilenet import MobileNet
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input, Dense, InputLayer
 from keras.optimizers import RMSprop
-
+import tensorflow as tf
 import paho.mqtt.client as mqtt
 
 from threading import Thread
@@ -39,7 +39,7 @@ def split_model_on(model, starting_layer, end_layer):
     new_input = Input(batch_shape=model.layers[starting_layer].get_input_shape_at(0))
 
     layer_outputs = {}
-    
+
     def get_output_of_layer(layer):
         # if we have already applied this layer on its input(s) tensors,
         # just return its already computed output
@@ -77,11 +77,13 @@ def split_model_on(model, starting_layer, end_layer):
     return Model(new_input, new_output)
 
 def prepare_model(client, modelpath, model_split):
-    global LOADED_MODEL
+    global LOADED_MODEL, graph
     print(DEVICE_NAME + " : attempting to load model")
     LOADED_MODEL = MobileNet()
     LOADED_MODEL.load_weights(modelpath)
+    LOADED_MODEL._make_predict_function()
     LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
+    graph = tf.get_default_graph()
     # LOADED_MODEL.summary()
     client.publish("devices/model_loaded", json.dumps({
         'from': DEVICE_NAME,
@@ -125,21 +127,22 @@ def process_actions(client):
         if data_queue.empty() == False or is_inferencing == True:
             task = data_queue.get()
             data = np.array(task['data'])
-            result = LOADED_MODEL.predict(data)
-            devices = task['for']
-            # * Send output to next device
-            if len(devices) != 0:
-                recipient = devices[0]
-                output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
-                client.publish(recipient + '/tasks', json.dumps(output))
-            # * If last device, publish output
-            else:
-                output = {
-                    'data': result.tolist(),
-                    'started': task['started'],
-                    'ended': time.time()
-                }
-                client.publish('output/results', json.dumps(output))
+            with graph.as_default():
+                result = LOADED_MODEL.predict(data)
+                devices = task['for']
+                # * Send output to next device
+                if len(devices) != 0:
+                    recipient = devices[0]
+                    output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
+                    client.publish(recipient + '/tasks', json.dumps(output))
+                # * If last device, publish output
+                else:
+                    output = {
+                        'data': result.tolist(),
+                        'started': task['started'],
+                        'ended': time.time()
+                    }
+                    client.publish('output/results', json.dumps(output))
         else:
             time.sleep(0.01)
 
