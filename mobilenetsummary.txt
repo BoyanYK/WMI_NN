@@ -1,16 +1,4 @@
-/usr/local/bin/python3.7 "/Users/anthonychua/Google Drive/School/KAIST/Lessons/Wireless Mobile Internet/Project/WMI_NN/xception.py"
-Using MXNet backend
-BEGIN DRY RUN
-2019-11-20 16:50:38
-/usr/local/lib/python3.7/site-packages/keras/backend/mxnet_backend.py:94: UserWarning: MXNet Backend performs best with `channels_first` format. Using `channels_last` will significantly reduce performance due to the Transpose operations. For performance improvement, please use this API`keras.utils.to_channels_first(x_input)`to transform `channels_last` data to `channels_first` format and also please change the `image_data_format` in `keras.json` to `channels_first`.Note: `x_input` is a Numpy tensor or a list of Numpy tensorRefer to: https://github.com/awslabs/keras-apache-mxnet/tree/master/docs/mxnet_backend/performance_guide.md
-  train_symbol = func(*args, **kwargs)
-/usr/local/lib/python3.7/site-packages/keras/backend/mxnet_backend.py:97: UserWarning: MXNet Backend performs best with `channels_first` format. Using `channels_last` will significantly reduce performance due to the Transpose operations. For performance improvement, please use this API`keras.utils.to_channels_first(x_input)`to transform `channels_last` data to `channels_first` format and also please change the `image_data_format` in `keras.json` to `channels_first`.Note: `x_input` is a Numpy tensor or a list of Numpy tensorRefer to: https://github.com/awslabs/keras-apache-mxnet/tree/master/docs/mxnet_backend/performance_guide.md
-  test_symbol = func(*args, **kwargs)
-/usr/local/lib/python3.7/site-packages/keras/backend/mxnet_backend.py:94: UserWarning: MXNet Backend uses `channels_first` format. Axis for BatchNorm should ideally be `1`.Provided - `-1`. Performance can be significantly lower!
-  train_symbol = func(*args, **kwargs)
-/usr/local/lib/python3.7/site-packages/keras/backend/mxnet_backend.py:97: UserWarning: MXNet Backend uses `channels_first` format. Axis for BatchNorm should ideally be `1`.Provided - `-1`. Performance can be significantly lower!
-  test_symbol = func(*args, **kwargs)
-_________________________________________________________________
+____________________
 Layer (type)                 Output Shape              Param #
 =================================================================
 input_1 (InputLayer)         (None, 224, 224, 3)       0
@@ -174,6 +162,7 @@ _________________________________________________________________
 conv_pw_12_bn (BatchNormaliz (None, 7, 7, 1024)        4096
 _________________________________________________________________
 conv_pw_12_relu (ReLU)       (None, 7, 7, 1024)        0
+# TODO
 _________________________________________________________________
 conv_dw_13 (DepthwiseConv2D) (None, 7, 7, 1024)        9216
 _________________________________________________________________
