@@ -34,7 +34,7 @@ def prepare_inputs():
     print(x_test.shape[0], 'test samples')
     return (x_train, y_train), (x_test, y_test)
 
-def send_inputs(client, devices):
+def send_inputs(client, devices, iterations):
     """Loads in dataset input and sends it to the first device in the DDNN"""
     print('About to prepare inputs')
     # (x_train, y_train), (x_test, y_test) = prepare_inputs()
@@ -52,7 +52,7 @@ def send_inputs(client, devices):
     # print(outputs)
     print('@@ ---------------- @@')
     device = devices[0]
-    for i in range(10):
+    for i in range(iterations):
         a = np.array(x)
         task = { 
             'data': a.tolist(), 

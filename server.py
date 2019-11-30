@@ -18,6 +18,8 @@ parser.add_argument("--config", help="Config filepath",
                     action="store", default='configs.json')
 parser.add_argument("--devices", help="Number of devices that are going to connect",
                     action="store", default=2, type=int)
+parser.add_argument("--iterations", help="Number of iterations to perform",
+                    action="store", default=10, type=int)
 args = parser.parse_args()
 
 DEVICE_NAME = args.name
@@ -44,7 +46,7 @@ def on_model_loaded(client, obj, msg):
     loaded_parts.append(message['from'])
     if len(set(loaded_parts)) == DEVICE_COUNT:
         print('about to go to send inputs')
-        inference = Thread(target=server_model.send_inputs, args=(client,devices))
+        inference = Thread(target=server_model.send_inputs, args=(client,devices,args.iterations))
         inference.start()
 
 def on_init(client, obj, msg):
@@ -100,7 +102,7 @@ client.on_connect = on_connect
 client.message_callback_add("devices/init", on_init)
 client.message_callback_add("devices/model_loaded", on_model_loaded)
 client.message_callback_add("output/results", on_output)
-client.connect("127.0.0.1", port=1884)
+client.connect("127.0.0.1", port=1883)
 # * Start a webserver to handle file downloads in a new thread
 fServer = Thread(target=fileserver.start_server)
 fServer.start()

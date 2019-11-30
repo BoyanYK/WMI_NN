@@ -141,21 +141,23 @@ def process_actions(client):
             task = data_queue.get()
             data = np.array(task['data'])
             with graph.as_default():
-                result = LOADED_MODEL.predict(data)
-                devices = task['for']
-                # * Send output to next device
-                if len(devices) != 0:
-                    recipient = devices[0]
-                    output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
-                    client.publish(recipient + '/tasks', json.dumps(output))
-                # * If last device, publish output
-                else:
-                    output = {
-                        'data': result.tolist(),
-                        'started': task['started'],
-                        'ended': time.time()
-                    }
-                    client.publish('output/results', json.dumps(output))
+                with tf.Session() as sess:
+                    sess.run(tf.global_variables_initializer())
+                    result = LOADED_MODEL.predict(data)
+                    devices = task['for']
+                    # * Send output to next device
+                    if len(devices) != 0:
+                        recipient = devices[0]
+                        output = { 'data': result.tolist(), 'for': devices[1:], 'is_inferencing': True, 'started': task['started'] }
+                        client.publish(recipient + '/tasks', json.dumps(output))
+                    # * If last device, publish output
+                    else:
+                        output = {
+                            'data': result.tolist(),
+                            'started': task['started'],
+                            'ended': time.time()
+                        }
+                        client.publish('output/results', json.dumps(output))
         else:
             time.sleep(0.01)
 
