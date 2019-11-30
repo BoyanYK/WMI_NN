@@ -57,23 +57,24 @@ def on_init(client, obj, msg):
     devices.append(device)
     # * If all devices have connected tell them to download model
     if len(devices) == DEVICE_COUNT:
-        model_split = {}
-        for dev in range(DEVICE_COUNT - 1):
-            model_split[devices[dev]] = {
-                "layers_from": CONFIG.pop(0),
-                "layers_to": CONFIG.pop(0),
-                "output_receiver": devices[dev+1]
-            }
-            print(model_split)
-        model_split[devices[DEVICE_COUNT - 1]] = {
-            "layers_from": CONFIG.pop(0),
-            "layers_to": CONFIG.pop(0),
-            "output_receiver": "output"
-        }
-        print(model_split)
+        server_model.make_device_models(MODEL_NAME, devices, CONFIG)
+        # model_split = {}
+        # for dev in range(DEVICE_COUNT - 1):
+        #     model_split[devices[dev]] = {
+        #         "layers_from": CONFIG.pop(0),
+        #         "layers_to": CONFIG.pop(0),
+        #         "output_receiver": devices[dev+1]
+        #     }
+        #     print(model_split)
+        # model_split[devices[DEVICE_COUNT - 1]] = {
+        #     "layers_from": CONFIG.pop(0),
+        #     "layers_to": CONFIG.pop(0),
+        #     "output_receiver": "output"
+        # }
+        # print(model_split)
         task = {
             "filename": MODEL_NAME + '.h5',
-            "model_split": model_split
+            "model_split": {} # model_split
         }
         print(task)
         client.publish('init/models', json.dumps(task))

@@ -9,7 +9,7 @@ import time
 
 import keras
 
-from keras.models import Model, load_model, Sequential
+from keras.models import Model, load_model, Sequential, model_from_json
 from keras.layers import Input, Dense, InputLayer
 from keras.optimizers import RMSprop
 import tensorflow as tf
@@ -79,15 +79,20 @@ def split_model_on(model, starting_layer, end_layer):
 def prepare_model(client, modelpath, model_split, model_name):
     global LOADED_MODEL, graph
     print(DEVICE_NAME + " : attempting to load model")
-    if "resnet" in model_name:
-        from keras.applications.resnet50 import ResNet50
-        LOADED_MODEL = ResNet50()
-    elif "mobilenet" in model_name:
-        from keras.applications.mobilenet import MobileNet
-        LOADED_MODEL = MobileNet()
-    LOADED_MODEL.load_weights(modelpath)
-    LOADED_MODEL._make_predict_function()
-    LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
+    # if "resnet" in model_name:
+    #     from keras.applications.resnet50 import ResNet50
+    #     LOADED_MODEL = ResNet50()
+    # elif "mobile_net" in model_name:
+    #     from keras.applications.mobilenet import MobileNet
+    #     LOADED_MODEL = MobileNet()
+    # LOADED_MODEL.load_weights(modelpath)
+    # LOADED_MODEL._make_predict_function()
+    # LOADED_MODEL = split_model_on(LOADED_MODEL, model_split[DEVICE_NAME]['layers_from'], model_split[DEVICE_NAME]['layers_to'])
+    # graph = tf.get_default_graph()
+    # LOADED_MODEL = load_model(modelpath)
+    with open(DEVICE_NAME + '_model.json', 'r') as json_file:
+        LOADED_MODEL = model_from_json(json_file.read())
+    LOADED_MODEL.load_weights(DEVICE_NAME + "_model_weights.h5")
     graph = tf.get_default_graph()
     # LOADED_MODEL.summary()
     client.publish("devices/model_loaded", json.dumps({
@@ -115,12 +120,15 @@ def on_task(client, obj, msg):
 def on_receive_model_info(client, obj, msg):
     """Handle downloading of neural network model"""
     data = json.loads(msg.payload)
-    filename = data['filename']
+    # filename = DEVICE_NAME + '.h5'
     model_split = data['model_split']
     print(DEVICE_NAME + ' : ' + ' starting to download') # TODO Change this to better logging
-    url = 'http://127.0.0.1:8000/' + data['filename']
-    urllib.request.urlretrieve(url, DEVICE_NAME + '_model.h5')
-    print(DEVICE_NAME + ' : ' + ' download complete') # TODO Change this to better logging
+    url = 'http://127.0.0.1:8000/' + DEVICE_NAME + '.json'
+    urllib.request.urlretrieve(url, DEVICE_NAME + '_model.json')
+    print(DEVICE_NAME + ' : ' + ' model download complete') # TODO Change this to better logging
+    url = 'http://127.0.0.1:8000/' + DEVICE_NAME + '_weights.h5'
+    urllib.request.urlretrieve(url, DEVICE_NAME + '_model_weights.h5')
+    print(DEVICE_NAME + ' : ' + ' weights download complete') # TODO Change this to better logging
     prepare_model(client, DEVICE_NAME + '_model.h5', model_split, data['filename'])
 
 def process_actions(client):
