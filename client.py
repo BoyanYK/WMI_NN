@@ -30,6 +30,7 @@ DEVICE_NAME = args.name
 LOADED_MODEL = {}
 data_queue = queue.Queue()
 is_inferencing = False
+is_loaded = False
 model_split = {} # * Object that contains information on how neural network should be split
 
 # TODO Move these functions to another file
@@ -94,6 +95,7 @@ def prepare_model(client, modelpath, model_split, model_name):
         LOADED_MODEL = model_from_json(json_file.read())
     LOADED_MODEL.load_weights(DEVICE_NAME + "_model_weights.h5")
     graph = tf.get_default_graph()
+    is_loaded = True
     # LOADED_MODEL.summary()
     client.publish("devices/model_loaded", json.dumps({
         'from': DEVICE_NAME,
@@ -105,6 +107,11 @@ def on_connect(client, userdata, flags, rc):
     """Handles initial connection to Mosquitto Broker"""
     if rc==0:
         print("connected OK Returned code=",rc)
+        if is_loaded:
+            client.publish("devices/model_loaded", json.dumps({
+                'from': DEVICE_NAME,
+                'status': 'MODEL LOADED'
+            }))
     else:
         print("Bad connection Returned code=",rc)
 
